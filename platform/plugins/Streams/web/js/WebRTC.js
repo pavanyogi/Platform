@@ -984,21 +984,25 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
                     var fullName = '';
                     Q.Streams.get(userId, 'Streams/user/firstName', function () {
                         firstName = this.fields.content;
-
-                        Q.Streams.get(userId, 'Streams/user/lastName', function () {
-                            lastName = this.fields.content;
-                        });
-
                         if(firstName != null) {
                             fullName += firstName;
                         }
-                        if(lastName != null) {
-                            fullName += ' ' + lastName;
+                        try {
+                            Q.Streams.get(userId, 'Streams/user/lastName', function () {
+                                lastName = this.fields.content;
+
+                                if(lastName != null) {
+                                    fullName += ' ' + lastName;
+                                }
+
+                                participant.username = fullName;
+
+                                if(callback != null) callback({firstName:firstName, lastName:lastName});
+                            });
+                        } catch (e) {
+                            participant.username = fullName;
+                            if(callback != null) callback({firstName:firstName, lastName:lastName});
                         }
-
-                        participant.username = fullName;
-
-                        if(callback != null) callback({firstName:firstName, lastName:lastName});
 
                     });
                 }
@@ -2698,7 +2702,6 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
                     }
 
                     for(let m in roomScreens) {
-
                         if(screen == roomScreens[m]){
                             screen.isActive = false;
                             roomScreens.splice(m, 1);
