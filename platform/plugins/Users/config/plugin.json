@@ -45,7 +45,9 @@
 			"Q/uploads/Users/:userId/icon/:timestamp/:size.png": {"mobile": "Users", "action": "missingIcon"},
 			"Q/plugins/Users/:action": {"module": "Users"},
 			"m/:mobileNumber": { "module": "Users", "action": "activate" },
-			"e/:emailAddress": { "module": "Users", "action": "activate" }
+			"e/:emailAddress": { "module": "Users", "action": "activate" },
+			"Users/webhook/:platform/:appId/:suffix": {"module": "Users", "action": "webhook"},
+			"Users/webhook/:platform/:appId": {"module": "Users", "action": "webhook"}
 		},
 		"session": {
 			"db": {
@@ -104,7 +106,7 @@
 		},
 		"login": {
 			"identifierType": "email,mobile",
-			"using": "native,web3,facebook",
+			"using": "native,web3,facebook,telegram",
 			"userQueryUri": "Users/user",
 			"iconType": "wavatar",
 			"gravatar": true,

@@ -17,7 +17,7 @@ function Users_before_Q_responseExtras()
 		$loginOptions = Q_Config::get('Users', 'login', array(
 			"identifierType" => 'email,mobile', 
 			"userQueryUri" => 'Users/user',
-			"using" => "native,web3,facebook",
+			"using" => "native,web3,facebook,telegram",
 			"noRegister" => false
 		));
 		$loginOptions["afterActivate"] = Q_Uri::url($afterActivate);
