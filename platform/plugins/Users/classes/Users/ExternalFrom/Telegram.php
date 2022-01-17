@@ -90,11 +90,46 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
 
     function setWebhook()
     {
+        $botApiKey = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botApiKey', null);
+        $botUserName = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botUserName', null);
+        $webhookUrl = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'webhook', 'url', null);
+        $webhookCertificate = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'webhook', 'certificate', null);
 
+        try {
+            // Create Telegram API object
+            $telegram = new Longman\TelegramBot\Telegram($botApiKey, $botUserName);
+
+            /**
+             * REMEMBER to define the URL to your hook.php file in:
+             * config.php: ['webhook']['url'] => 'https://your-domain/path/to/hook.php'
+             */
+
+            // Set the webhook
+            $result = $telegram->setWebhook($webhookUrl);
+
+            // To use a self-signed certificate, use this line instead
+             $result = $telegram->setWebhook($webhookUrl, ['certificate' => $webhookCertificate]);
+
+            echo $result->getDescription();
+        } catch (Longman\TelegramBot\Exception\TelegramException $e) {
+            echo $e->getMessage();
+        }
     }
 
     function deleteWebhook()
     {
+        $botApiKey = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botApiKey', null);
+        $botUserName = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botUserName', null);
+        try {
+            // Create Telegram API object
+            $telegram = new Longman\TelegramBot\Telegram($botApiKey, $botUserName);
 
+            // Unset / delete the webhook
+            $result = $telegram->deleteWebhook();
+
+            echo $result->getDescription();
+        } catch (Longman\TelegramBot\Exception\TelegramException $e) {
+            echo $e->getMessage();
+        }
     }
 }
