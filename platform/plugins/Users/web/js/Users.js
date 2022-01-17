@@ -346,6 +346,33 @@
 			appId: options.appId
 		});
 	};
+
+    Users.authenticate.telegram = function (platform, platformAppId, onSuccess, onCancel, options) {
+        options = options || {};
+        var fields = {};
+
+        /*
+        // make sure telegram is initialized
+        Users.init.telegram(function () {
+            // check if user is connected to facebook
+            Users.Telegram.getLoginStatus(function (response) {
+                if (response.status === 'connected') {
+                    _handleXid(
+                        platform, platformAppId, response.authResponse.userID,
+                        onSuccess, onCancel, Q.extend({response: response}, options)
+                    );
+                } else if (platformAppId) {
+                    // let's delete any stale facebook cookies there might be
+                    // otherwise they might confuse our server-side authentication.
+                    Q.cookie('tels_' + platformAppId, null, {path: '/'});
+                    Q.cookie('telsr_' + platformAppId, null, {path: '/'});
+                    _doCancel(null, platform, platformAppId, onSuccess, onCancel, options);
+                }
+            }, options.force ? true : false);
+        }, {
+            appId: options.appId
+        });*/
+    };
 	
 	Users.authenticate.web3 = function (platform, platformAppId, onSuccess, onCancel, options) {
 		options = Q.extend(Users.authenticate.web3.options, options);
