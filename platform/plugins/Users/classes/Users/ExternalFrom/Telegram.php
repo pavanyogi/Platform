@@ -87,4 +87,14 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
 			return array();
 		}
 	}
+
+    function setWebhook()
+    {
+
+    }
+
+    function deleteWebhook()
+    {
+
+    }
 }

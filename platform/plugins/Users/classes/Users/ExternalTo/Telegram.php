@@ -78,4 +78,19 @@ class Users_ExternalTo_Telegram extends Users_ExternalTo implements Users_Extern
 			return array();
 		}
 	}
+
+    /**
+     * @param $appId
+     */
+    function registerWebhook($appId)
+    {
+        $suffix = Q_Config::expect("Users", "apps", "telegram", $appId, "webhook", "suffix");
+        $url = Q_Uri::from(array(
+            'module' => 'Users', 'action' => 'webhook',
+            'platform' => 'telegram', 'appId' => $appId,
+            'suffix' => $suffix
+        ))->toUrl("Users/webhook/:platform/:appId/:suffix"); // provide route name for efficiency
+
+    }
+
 }
