@@ -88,7 +88,7 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
 		}
 	}
 
-    function setWebhook()
+    static function setWebhook()
     {
         $botApiKey = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botApiKey', null);
         $botUserName = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botUserName', null);
