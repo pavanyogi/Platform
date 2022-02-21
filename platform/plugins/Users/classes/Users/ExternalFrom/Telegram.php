@@ -114,12 +114,11 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
 
             echo $result->getDescription();
         } catch (Longman\TelegramBot\Exception\TelegramException $e) {
-            echo $e->getMessage();
             Q::log($e, 'Users');
         }
     }
 
-    function deleteWebhook()
+    static function deleteWebhook()
     {
         $botApiKey = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botApiKey', null);
         $botUserName = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botUserName', null);
@@ -132,7 +131,25 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
 
             echo $result->getDescription();
         } catch (Longman\TelegramBot\Exception\TelegramException $e) {
-            echo $e->getMessage();
+            Q::log($e, 'Users');
+        }
+    }
+
+    static function handleWebhook()
+    {
+        $botApiKey = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botApiKey', null);
+        $botUserName = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botUserName', null);
+        try {
+            // Create Telegram API object
+            $telegram = new Longman\TelegramBot\Telegram($botApiKey, $botUserName);
+
+            // Handle telegram webhook request
+            $telegram->handle();
+        } catch (Longman\TelegramBot\Exception\TelegramException $e) {
+            // Silence is golden!
+            // log telegram errors
+            // echo $e->getMessage();
+            Q::log($e, 'Users');
         }
     }
 }

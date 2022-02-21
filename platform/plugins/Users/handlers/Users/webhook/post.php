@@ -7,11 +7,24 @@ function Users_webhook_post($params)
 //    return 'Users_webhook_post';
 
     $req = array_merge($_REQUEST, $params);
-    $param1 = Q::ifset($req, 'param1', null);
+    $hookAction = Q::ifset($req, 'hookAction', null);
 
-    Q::log(array('$req' => $req, '$param1' => $param1 ), 'Users');
+    Q::log(array('$req' => $req, '$hookAction' => $hookAction ), 'Users');
+    $webhookResult = '';
+    if($hookAction){
+        if($hookAction === 'set'){
+            $webhookResult = Users_ExternalFrom_Telegram::setWebhook();
+        } elseif ($hookAction === 'delete') {
+            $webhookResult = Users_ExternalFrom_Telegram::deleteWebhook();
+        }
+    }
 
-    Users_ExternalFrom_Telegram::setWebhook();
+    if(!$hookAction){
+        $webhookResult = Users_ExternalFrom_Telegram::handleWebhook();
+    }
+
+    Q::log(array('$webhookResult' => $webhookResult ), 'Users');
+
     Q_Response::setSlot('result', true);
 
 }
