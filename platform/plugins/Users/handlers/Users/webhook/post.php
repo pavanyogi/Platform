@@ -16,6 +16,8 @@ function Users_webhook_post($params)
             $webhookResult = Users_ExternalFrom_Telegram::setWebhook();
         } elseif ($hookAction === 'delete') {
             $webhookResult = Users_ExternalFrom_Telegram::deleteWebhook();
+        } else {
+            $webhookResult = Users_ExternalFrom_Telegram::resetWebhook();
         }
     }
 

@@ -112,7 +112,8 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
             // To use a self-signed certificate, use this line instead
 //             $result = $telegram->setWebhook($webhookUrl, ['certificate' => $webhookCertificate]);
 
-            echo $result->getDescription();
+//            echo $result->getDescription();
+            Q::log($result, 'Users');
         } catch (Longman\TelegramBot\Exception\TelegramException $e) {
             Q::log($e, 'Users');
         }
@@ -129,10 +130,17 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
             // Unset / delete the webhook
             $result = $telegram->deleteWebhook();
 
-            echo $result->getDescription();
+//            echo $result->getDescription();
+            Q::log($result, 'Users');
         } catch (Longman\TelegramBot\Exception\TelegramException $e) {
             Q::log($e, 'Users');
         }
+    }
+
+    static function resetWebhook()
+    {
+        self::deleteWebhook();
+        self::setWebhook();
     }
 
     static function handleWebhook()
