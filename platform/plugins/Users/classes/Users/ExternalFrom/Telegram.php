@@ -151,6 +151,14 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
             // Create Telegram API object
             $telegram = new Longman\TelegramBot\Telegram($botApiKey, $botUserName);
 
+            // Define all paths for your custom commands in this array (leave as empty array if not used)
+            $commands_paths = [
+                __DIR__ . '/Commands',
+            ];
+
+            // Add this line inside the try{}
+            $telegram->addCommandsPaths($commands_paths);
+
             // Handle telegram webhook request
             $telegram->handle();
         } catch (Longman\TelegramBot\Exception\TelegramException $e) {
