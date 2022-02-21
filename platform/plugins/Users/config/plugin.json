@@ -37,6 +37,8 @@
 			"Q/response/content": ["Users/after/Q_response_content"]
 		},
 		"routes@start": {
+            "Q/plugins/Users/webhook/:platform/:appId/:suffix/": {"module": "Users", "action": "webhook"},
+            "Q/plugins/Users/webhook/:platform/:appId/": {"module": "Users", "action": "webhook"},
 			"login/facebook": {"module": "Users", "action": "facebook"},
 			"Users/session": {"module": "Users", "action": "session"},
 			"Users/analytics": {"module": "Users", "action": "analytics"},
@@ -45,9 +47,9 @@
 			"Q/uploads/Users/:userId/icon/:timestamp/:size.png": {"mobile": "Users", "action": "missingIcon"},
 			"Q/plugins/Users/:action": {"module": "Users"},
 			"m/:mobileNumber": { "module": "Users", "action": "activate" },
-			"e/:emailAddress": { "module": "Users", "action": "activate" },
-			"Users/webhook/:platform/:appId/:suffix": {"module": "Users", "action": "webhook"},
-			"Users/webhook/:platform/:appId": {"module": "Users", "action": "webhook"}
+			"e/:emailAddress": { "module": "Users", "action": "activate" }
+
+
 		},
 		"session": {
 			"db": {
