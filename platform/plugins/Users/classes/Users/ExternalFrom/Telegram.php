@@ -4,6 +4,8 @@
  * @module Users
  */
 
+require_once USERS_PLUGIN_DIR.'/vendor/autoload.php';
+
 /**
  * Class representing Telegram app user.
  *
@@ -113,6 +115,7 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
             echo $result->getDescription();
         } catch (Longman\TelegramBot\Exception\TelegramException $e) {
             echo $e->getMessage();
+            Q::log($e, 'Users');
         }
     }
 

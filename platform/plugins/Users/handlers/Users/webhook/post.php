@@ -7,7 +7,11 @@ function Users_webhook_post($params)
 //    return 'Users_webhook_post';
 
     $req = array_merge($_REQUEST, $params);
+    $param1 = Q::ifset($req, 'param1', null);
+
+    Q::log(array('$req' => $req, '$param1' => $param1 ), 'Users');
 
     Users_ExternalFrom_Telegram::setWebhook();
+    Q_Response::setSlot('result', true);
 
 }
