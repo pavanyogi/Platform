@@ -93,7 +93,7 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
         $botApiKey = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botApiKey', null);
         $botUserName = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botUserName', null);
         $webhookUrl = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'webhook', 'url', null);
-        $webhookCertificate = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'webhook', 'certificate', null);
+//        $webhookCertificate = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'webhook', 'certificate', null);
 
         try {
             // Create Telegram API object
@@ -108,7 +108,7 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
             $result = $telegram->setWebhook($webhookUrl);
 
             // To use a self-signed certificate, use this line instead
-             $result = $telegram->setWebhook($webhookUrl, ['certificate' => $webhookCertificate]);
+//             $result = $telegram->setWebhook($webhookUrl, ['certificate' => $webhookCertificate]);
 
             echo $result->getDescription();
         } catch (Longman\TelegramBot\Exception\TelegramException $e) {
