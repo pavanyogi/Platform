@@ -351,10 +351,10 @@
         options = options || {};
         var fields = {};
 
-        /*
+
         // make sure telegram is initialized
         Users.init.telegram(function () {
-            // check if user is connected to facebook
+            // check if user is connected to telegram
             Users.Telegram.getLoginStatus(function (response) {
                 if (response.status === 'connected') {
                     _handleXid(
@@ -362,7 +362,7 @@
                         onSuccess, onCancel, Q.extend({response: response}, options)
                     );
                 } else if (platformAppId) {
-                    // let's delete any stale facebook cookies there might be
+                    // let's delete any stale telegram cookies there might be
                     // otherwise they might confuse our server-side authentication.
                     Q.cookie('tels_' + platformAppId, null, {path: '/'});
                     Q.cookie('telsr_' + platformAppId, null, {path: '/'});
@@ -371,7 +371,7 @@
             }, options.force ? true : false);
         }, {
             appId: options.appId
-        });*/
+        });
     };
 	
 	Users.authenticate.web3 = function (platform, platformAppId, onSuccess, onCancel, options) {
