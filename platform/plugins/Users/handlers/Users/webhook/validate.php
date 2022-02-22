@@ -8,9 +8,18 @@
  */
 function Users_webhook_validate($params)
 {
-    $botApiKey = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botApiKey', null);
-
+    /*
     $req = array_merge($_REQUEST, $params);
+    $hookAction = Q::ifset($req, 'hookAction', null);
+    $reqSecret = Q::ifset($req, 'secret', null);
+
+    $secret = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'secret', null);
+
+    if($hookAction && $reqSecret === $secret){
+        return;
+    }
+
+    $botApiKey = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botApiKey', null);
 
     Q::log(array('Telegram data' => $req), 'Users');
 
@@ -31,5 +40,6 @@ function Users_webhook_validate($params)
     if ((time() - $auth_data['auth_date']) > 86400) {
         throw new Exception('Data is outdated');
     }
-    return $auth_data;
+*/
+//    return $auth_data;
 }

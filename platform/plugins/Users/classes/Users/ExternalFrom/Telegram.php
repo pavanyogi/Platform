@@ -159,6 +159,8 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
             // Add this line inside the try{}
             $telegram->addCommandsPaths($commands_paths);
 
+            self::setTelegramLogging();
+
             // Handle telegram webhook request
             $telegram->handle();
         } catch (Longman\TelegramBot\Exception\TelegramException $e) {
@@ -167,5 +169,18 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
             // echo $e->getMessage();
             Q::log($e, 'Users');
         }
+    }
+
+    static function setTelegramLogging()
+    {
+        Longman\TelegramBot\TelegramLog::initialize(
+            new Monolog\Logger('telegram_bot', [
+                (new Monolog\Handler\StreamHandler(__DIR__ . '/php-telegram-bot-debug.log', Monolog\Logger::DEBUG))->setFormatter(new Monolog\Formatter\LineFormatter(null, null, true)),
+                (new Monolog\Handler\StreamHandler(__DIR__ . '/php-telegram-bot-error.log', Monolog\Logger::ERROR))->setFormatter(new Monolog\Formatter\LineFormatter(null, null, true)),
+            ]),
+            new Monolog\Logger('telegram_bot_updates', [
+                (new Monolog\Handler\StreamHandler(__DIR__ . '/php-telegram-bot-update.log', Monolog\Logger::INFO))->setFormatter(new Monolog\Formatter\LineFormatter('%message%' . PHP_EOL)),
+            ])
+        );
     }
 }
