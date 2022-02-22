@@ -41,5 +41,14 @@ function Users_webhook_validate($params)
         throw new Exception('Data is outdated');
     }
 */
-//    return $auth_data;
+
+    $platform = 'telegram';
+    $appId = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'appId', null);
+    $user = Users::authenticate($platform, $appId, $authenticated);
+    Q::log(array('$user' => $user), 'Users');
+    if (!$user) {
+        throw new Users_Exception_NotLoggedIn();
+    }
+    Users::setLoggedInUser($user);
+
 }
