@@ -38,7 +38,6 @@
 		},
 		"routes@start": {
             "Q/plugins/Users/webhook/:platform/:appId/:suffix/": {"module": "Users", "action": "webhook"},
-            "Q/plugins/Users/webhook/:platform/:appId/": {"module": "Users", "action": "webhook"},
 			"login/facebook": {"module": "Users", "action": "facebook"},
 			"Users/session": {"module": "Users", "action": "session"},
 			"Users/analytics": {"module": "Users", "action": "analytics"},

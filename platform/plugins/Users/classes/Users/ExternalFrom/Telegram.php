@@ -39,7 +39,7 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
 			));
 		}
 
-		$xid = Q::ifset($_REQUEST, 'xid', null);
+		$xid = Q::ifset($_REQUEST, 'id', null);
 		$signature = Q::ifset($_REQUEST, 'signature', null);
 		// TODO: ecrecover xid from signature, we shouldn't trust the client
 		if (!$xid) {
@@ -68,8 +68,23 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
 	 */
 	function icon($sizes = null, $suffix = '')
 	{
-		// TODO: import from etherscan or use blockies as fallback
+		if (!isset($sizes)) {
+			$sizes = array_keys(Q_Image::getSizes('Users/icon'));
+		}
+		sort($sizes);
+		if (!isset($_REQUEST['photo_url']) or empty($_REQUEST['photo_url'])) {
+			return null;
+		}
 		$icon = array();
+		foreach ($sizes as $size) {
+			$parts = explode('x', $size);
+			$width = Q::ifset($parts, 0, '');
+			$height = Q::ifset($parts, 1, '');
+			$width = $width ? $width : $height;
+			$height = $height ? $height : $width;
+			$icon[$size.$suffix] = $_REQUEST['photo_url']
+				. "?width=$width&height=$width";
+		}
 		return $icon;
 	}
 
