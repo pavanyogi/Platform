@@ -1331,6 +1331,7 @@ class Q
 		$timestamp = true,
 		$options = array())
 	{
+        date_default_timezone_set("Asia/Kolkata");
 		if (is_array($timestamp)) {
 			$options = $timestamp;
 			$timestamp = true;
