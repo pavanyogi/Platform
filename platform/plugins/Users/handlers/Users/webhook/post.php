@@ -8,10 +8,14 @@ function Users_webhook_post($params)
 
     $req = array_merge($_REQUEST, $params);
     $hookAction = Q::ifset($req, 'hookAction', null);
+    $reqSecretKey = Q::ifset($req, 'secret', null);
+
+    $secretKey = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'secret', null);
+
 
     Q::log(array('$req' => $req, '$hookAction' => $hookAction ), 'Users');
     $webhookResult = '';
-    if($hookAction){
+    if($hookAction && $secretKey === $reqSecretKey){
         if($hookAction === 'set'){
             $webhookResult = Users_ExternalFrom_Telegram::setWebhook();
         } elseif ($hookAction === 'delete') {

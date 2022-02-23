@@ -8,16 +8,17 @@
  */
 function Users_webhook_validate($params)
 {
-    /*
-    $req = array_merge($_REQUEST, $params);
-    $hookAction = Q::ifset($req, 'hookAction', null);
-    $reqSecret = Q::ifset($req, 'secret', null);
-
-    $secret = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'secret', null);
-
-    if($hookAction && $reqSecret === $secret){
+    if (isset($_REQUEST['hookAction']) or isset($_REQUEST['secret'])) {
         return;
     }
+
+    if (!isset($_REQUEST['id']) or !isset($_REQUEST['auth_date']) or !isset($_REQUEST['hash']) ) {
+        return;
+    }
+
+    Q::log(array('Users_webhook_validate' => 'Users_webhook_validate'), 'Users');
+
+    $req = array_merge($_REQUEST, $params);
 
     $botApiKey = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botApiKey', null);
 
@@ -40,15 +41,15 @@ function Users_webhook_validate($params)
     if ((time() - $auth_data['auth_date']) > 86400) {
         throw new Exception('Data is outdated');
     }
-*/
 
-    $platform = 'telegram';
-    $appId = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'appId', null);
-    $user = Users::authenticate($platform, $appId, $authenticated);
-    Q::log(array('$user' => $user), 'Users');
-    if (!$user) {
-        throw new Users_Exception_NotLoggedIn();
+    if (isset($_REQUEST['hash']) && isset($_REQUEST['username'])) {
+        $platform = 'telegram';
+        $appId = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'appId', null);
+        $user = Users::authenticate($platform, $appId, $authenticated);
+        Q::log(array('$user' => $user), 'Users');
+        if (!$user) {
+            throw new Users_Exception_NotLoggedIn();
+        }
+        Users::setLoggedInUser($user);
     }
-    Users::setLoggedInUser($user);
-
 }
