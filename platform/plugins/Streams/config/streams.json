@@ -78,7 +78,8 @@
 		"userField": "username",
 		"platforms": {
 			"facebook": "username",
-			"twitter": "screen_name"
+			"twitter": "screen_name",
+			"telegram": "username"
 		}
 	},
 	"Streams/user/firstName": {
@@ -91,7 +92,8 @@
 				"name",
 				" ",
 				0
-			]
+			],
+			"telegram": "first_name"
 		}
 	},
 	"Streams/user/middleName": {
@@ -112,7 +114,8 @@
 		"title": "Last Name",
 		"icon": "",
 		"platforms": {
-			"facebook": "last_name"
+			"facebook": "last_name",
+			"telegram": "last_name"
 		}
 	},
 	"Streams/user/emailAddress": {

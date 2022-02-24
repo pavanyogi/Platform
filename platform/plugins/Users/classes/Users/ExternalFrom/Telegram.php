@@ -95,14 +95,25 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
 	 */
 	function import($fieldNames)
 	{
-		// TODO: import from etherscan or use blockies as fallback
-		$platform = 'telegram';
-		if (!is_array($fieldNames)) {
-			$fieldNames = Q_Config::get('Users', 'import', $platform, null);
-		}
-		if (!$fieldNames) {
-			return array();
-		}
+        if (!is_array($fieldNames)) {
+            $fieldNames = Q_Config::get('Users', 'import', 'telegram', null);
+        }
+
+        if (!$fieldNames) {
+            return array();
+        }
+
+        $userDetails = array(
+            'first_name' => $_REQUEST['first_name'],
+            'last_name' => $_REQUEST['last_name'],
+            'username' => $_REQUEST['username']
+        );
+
+        Users::$cache['platformUserData'] = array(
+            'telegram' => $userDetails
+        );
+
+        return $userDetails;
 	}
 
     static function setWebhook()
