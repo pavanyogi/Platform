@@ -17,5 +17,5 @@ function Users_webhook_response_content($params)
         Users::setLoggedInUser($user);
     }
 
-    return Q::view("Users/content/webhook.php");
+//    return Q::view("Users/content/webhook.php");
 }
