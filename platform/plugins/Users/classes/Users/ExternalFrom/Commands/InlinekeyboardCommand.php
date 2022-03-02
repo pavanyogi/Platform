@@ -71,9 +71,8 @@ class InlinekeyboardCommand extends UserCommand
          *
          */
 
-//        $domain_url = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'domainUrl', null);
+        $domain_url = \Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'domainUrl', null);
 
-        $domain_url = 'https://tokensociety2.gmba.local';
         $text         = 'Go to ' . $domain_url . '!';
         $reply_markup = new InlineKeyboard([
             ['text' => 'Login', 'login_url' => new LoginUrl(['url' => $domain_url . '/Q/plugins/Users/webhook', 'forward_text' => 'Login (forwarded)'])],
