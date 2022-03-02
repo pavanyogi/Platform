@@ -1,0 +1,55 @@
+<?php
+/**
+ * @param $params
+ * @return mixed
+ * @throws Q_Exception_FilePermissions
+ * https://gist.github.com/anonymous/6516521b1fb3b464534fbc30ea3573c2
+ * https://github.com/php-telegram-bot/core/issues/1065#issuecomment-608951099
+ */
+function Users_webhook_validate($params)
+{
+    if (isset($_REQUEST['hookAction']) or isset($_REQUEST['secret'])) {
+        return;
+    }
+
+    if (!isset($_REQUEST['id']) or !isset($_REQUEST['auth_date']) or !isset($_REQUEST['hash']) ) {
+        return;
+    }
+
+    Q::log(array('Users_webhook_validate' => 'Users_webhook_validate'), 'Users');
+
+    $req = array_merge($_REQUEST, $params);
+
+    $botApiKey = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'botApiKey', null);
+
+    Q::log(array('Telegram data' => $req), 'Users');
+
+    $auth_data = $_GET;
+    $check_hash = $auth_data['hash'];
+    unset($auth_data['hash']);
+    $data_check_arr = [];
+    foreach ($auth_data as $key => $value) {
+        $data_check_arr[] = $key . '=' . $value;
+    }
+    sort($data_check_arr);
+    $data_check_string = implode("\n", $data_check_arr);
+    $secret_key = hash('sha256', $botApiKey, true);
+    $hash = hash_hmac('sha256', $data_check_string, $secret_key);
+    if (strcmp($hash, $check_hash) !== 0) {
+        throw new Exception('Data is NOT from Telegram');
+    }
+    if ((time() - $auth_data['auth_date']) > 86400) {
+        throw new Exception('Data is outdated');
+    }
+
+    if (isset($_REQUEST['hash']) && isset($_REQUEST['username'])) {
+        $platform = 'telegram';
+        $appId = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'appId', null);
+        $user = Users::authenticate($platform, $appId, $authenticated);
+        Q::log(array('$user' => $user), 'Users');
+        if (!$user) {
+            throw new Users_Exception_NotLoggedIn();
+        }
+        Users::setLoggedInUser($user);
+    }
+}
