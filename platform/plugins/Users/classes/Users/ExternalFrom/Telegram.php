@@ -27,36 +27,42 @@ class Users_ExternalFrom_Telegram extends Users_ExternalFrom implements Users_Ex
 	 */
 	static function authenticate($appId = null, $setCookie = true, $longLived = true)
 	{
-		list($appId, $appInfo) = Users::appInfo('telegram', $appId);
-		$platformAppId = Q::ifset($appInfo, 'appId', 1);
-		if (!$platformAppId) {
-			$platformAppId = Q::ifset($_REQUEST, 'chainId', 1); // todo - may be related to chainId
-		}
-		if (!intval($platformAppId)) {
-			throw new Q_Exception_BadValue(array(
-				'internal' => 'Users/apps config',
-				'problem' => "appId has to be a numeric chainId, not $platformAppId"
-			));
-		}
 
-		$xid = Q::ifset($_REQUEST, 'id', null);
-		$signature = Q::ifset($_REQUEST, 'signature', null);
-		// TODO: ecrecover xid from signature, we shouldn't trust the client
-		if (!$xid) {
-			$xid = Q::ifset($_COOKIE, 'Q_Users_telegram_address', null);
-		}
-		$expires = time() + Q::ifset($appInfo, 'expires', 60*60);
-		if ($xid and $setCookie) {
-			Q_Response::setCookie("Q_Users_telegram_address", $xid, $expires);
-		}
-		$ef = new Users_ExternalFrom_Telegram();
-		// note that $ef->userId was not set
-		$ef->platform = 'telegram';
-		$ef->appId = $platformAppId;
-		$ef->xid = $xid;
-		$ef->accessToken = null;
-		$ef->expires = $expires;
-		return $ef;
+        list($appId, $appInfo) = Users::appInfo('telegram', $appId);
+        $platformAppId = Q_Config::get('Users', 'apps', 'telegram', 'TokenSociety', 'appId', null);
+
+        $xid = strtolower(Q::ifset($_REQUEST, 'id', null));
+
+        $payload = Q::ifset($_REQUEST, 'auth_date', null);
+        $signature = Q::ifset($_REQUEST, 'hash', null);
+        if (!$payload or $signature) {
+            $cookieName = "wsr_$platformAppId";
+            if (isset($_COOKIE[$cookieName])) {
+                // A previous request has set the wsr cookie
+                $wsr_json = $_COOKIE[$cookieName];
+                if ($wsr = Q::json_decode($wsr_json, true)) {
+                    list($payload, $signature) = $wsr;
+                }
+            }
+        }
+
+        $expires = time() + Q::ifset($appInfo, 'expires', 60*60);
+        $cookieNames = array("wsr_$platformAppId", "wsr_$platformAppId".'_expires');
+        if ($xid and $setCookie) {
+            $parts = array($payload, $signature);
+            Q_Response::setCookie($cookieNames[0], Q::json_encode($parts), $expires);
+            Q_Response::setCookie($cookieNames[1], $expires, $expires);
+        }
+        $ef = new Users_ExternalFrom_Telegram();
+        // note that $ef->userId was not set
+        $ef->platform = 'telegram';
+        $ef->appId = $platformAppId;
+        $ef->xid = $xid;
+        $ef->accessToken = null;
+        $ef->expires = $expires;
+        $ef->set('cookiesToClearOnLogout', $cookieNames);
+        return $ef;
+
 	}
 
 	/**
